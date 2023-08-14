@@ -82,9 +82,13 @@ module.exports = {
             let product = await prisma.products.findMany({
                 where: {
                     category_id: category_id
-                }, include: {
-                    product_options: {}
-
+                },
+                include: {
+                    product_options: {
+                        include: {
+                            product_option_pictures: true
+                        }
+                    }
                 }
             });
             return {

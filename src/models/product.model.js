@@ -82,9 +82,95 @@ module.exports = {
             }
         } catch (err) {
             console.log("err", err);
+
             return {
                 status: false,
                 message: "Lỗi không xác định!"
+            }
+        }
+    },
+    findAllProducts: async () => {
+        try {
+            let products = await prisma.products.findMany()
+            return {
+                status: true,
+                message: "get all product thanh cong",
+                data: products
+            }
+        } catch (err) {
+            console.log("err", err);
+            return {
+                status: false,
+                message: "get all product that bai"
+            }
+        }
+    },
+    findMany: async function () {
+        try {
+            let products = await prisma.products.findMany();
+            return {
+                status: true,
+                message: "san pham duoc tim thay!",
+                data: products
+            }
+        } catch (err) {
+            return {
+                status: false,
+                message: "lỗi!"
+            }
+        }
+    },
+    searchByName: async function (searchString) {
+        try {
+            let products = await prisma.products.findMany({
+                where: {
+                    OR: [
+                        {
+                            name: {
+                                contains: searchString,
+                            }
+                        },
+                        {
+                            des: {
+                                contains: searchString,
+                            },
+                        }
+                    ]
+                }
+            });
+            return {
+                status: true,
+                message: "Ket qua search",
+                data: products
+            }
+        } catch (err) {
+            console.log("err", err)
+            return {
+                status: false,
+                message: "lỗi!"
+            }
+        }
+    },
+    update: async (productId, data) => {
+        try {
+            let product = await prisma.products.update({
+                where: {
+                    id: productId
+                },
+                data: {
+                    ...data
+                }
+            })
+
+            return {
+                status: true,
+                message: "Update thành công!",
+                data: product
+            }
+        } catch (err) {
+            return {
+                status: false,
+                message: "Lỗi gì đó!"
             }
         }
     },
